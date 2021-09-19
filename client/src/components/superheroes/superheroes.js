@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import HeroesList from '../heroeslist/heroeslist'
+import HeroesSearch from '../heroessearch/heroessearch'
+import './superheroes.css'
 import axios from "axios";
 
 export default () => {
@@ -10,11 +13,12 @@ export default () => {
       let fetch = await axios.get("http://localhost:1337/api/heroes");
 
       setHeroes(fetch.data);
-      console.log(fetch.data);
     };
 
     fetchHeroes();
   }, []);
+
+  const slugFilter = (hero) => hero.name.toLowerCase().includes(slug.toLowerCase())
 
   return (
     <div className="page">
@@ -22,12 +26,8 @@ export default () => {
       <div className="subtitle">
         A searchable list of all your favorite heroes
       </div>
-      <input
-        type="text"
-        name="search"
-        onChange={(event) => setSlug(event.target.value)}
-      />
-      <div className="slug">{slug}</div>
+      <HeroesSearch slug={slug} setSlug={setSlug}/>
+      <HeroesList heroes={heroes.filter(slugFilter)} />
     </div>
   );
 };
